@@ -1,0 +1,392 @@
+body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;}
+
+* {box-sizing: border-box;}
+
+input[type=text], select, textarea {
+width: 90%;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    resize: vertical;
+}
+
+input[type=submit] {
+  /*{#background-color: #4CAF50;#}*/
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+    border-radius: 5px;
+    /*padding: 8px;*/
+    margin-left: 10px;
+}
+
+.legend {
+    margin-top: 50px;
+    border-style: solid;
+    border: 1px solid black;
+    padding: 8px;
+    margin-left: 10px;
+}
+
+
+/*
+#input-parent {
+    height: 190px;
+    display: flex;
+}
+
+
+#left {
+    margin-left: 20px;
+    flex: 1; 
+}
+
+#center {
+    margin-left: 50px;  
+    margin-right: 50px; 
+    width: 150px;
+    overflow: auto;
+}
+
+#title-right {
+    margin-right: 20px;  
+    width: 300px;
+    overflow: auto;}
+
+#title-left {
+    margin-left: 20px;
+    flex: 1;  
+}
+*/
+#title-center {
+    margin-left: 50px;  /*间距*/
+    margin-right: 50px;  /*间距*/
+    width: 150px;
+    overflow: auto;
+}
+/*
+#right {
+    margin-right: 20px; 
+    width: 300px;
+    overflow: auto;}
+
+
+#button-parent {
+    height: 40px;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+*/
+#title-parent {
+    font-size: 18px;
+    /*height: 40px;*/
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #737373;
+}
+.textarea-wrapper {
+    width: 100%;
+    height: 190px;
+    position: relative;
+    overflow: auto;
+}
+
+#text {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    overflow: auto;
+    font-size: 16px;
+}
+
+.btn {
+  border: none; /* Remove borders */
+  color: white; /* Add a text color */
+  padding: 12px 20px; /* Add some padding */
+  cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+
+.success {background-color: #4CAF50;} /* Green */
+.success:hover {background-color: #46a049;}
+
+.btn {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+  /*background-color: #548BC5;*/
+  /*color: white;*/
+    padding: 8px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 4px;
+    width: 120px;
+    margin-left: -180px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: absolute;
+    display: inline-block;
+    float: right;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    right: 60px;
+    left: auto;
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 120px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.container button{
+    display: inline-block;
+}
+
+#btn1{
+    /*float:left;*/
+    /*background: #548BC5;*/
+    /*color: #FDFBFB;*/
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    /*background-color: #548BC5;*/
+    /*color: white;*/
+    padding: 6px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    width: 100px;
+    margin-top: 10px;
+    border: solid 1px black;
+}
+
+#btn2{
+    float:right;
+    position: absolute;
+    margin-left:10px ;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    font-size: 16px;
+    border: solid 1px black;
+    outline: none;
+    border-radius: 4px;
+    width: 100px;
+    margin-top: 10px;
+}
+        
+.main{
+            /*margin-left: 100px;*/
+            /*margin-right: 100px;*/
+}
+/* The container <div> - needed to position the dropdown content */
+.example-dropdown {
+    position: absolute;
+    display: inline-block;
+    float: right;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.example-dropdown-content {
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    right: 60px;
+    left: auto;
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 120px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Links inside the dropdown */
+.example-dropdown-content a {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.example-dropdown-content a:hover {background-color: #ddd}
+
+/* Show the dropdown menu on hover */
+.example-dropdown:hover .dexample-dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.btn:hover, .example-dropdown:hover .example-btn  {
+  background-color: #548BC5;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.example-btn:hover, .example-dropdown:hover .example-btn  {
+  background-color: #548BC5;
+}
+    
+.checkbox-inline {
+            font-size: 18px
+}
+
+.button-left intro-text {
+    width: 20px;
+    margin-right: auto;
+
+}
+
+.example-btn {
+  border: none; /* Remove borders */
+  color: white; /* Add a text color */
+  padding: 12px 20px; /* Add some padding */
+  cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+
+
+.info {background-color: #2196F3; border-radius: 4px;} /* Blue */
+.info:hover {background: #0b7dda;}
+.example-btn {
+        color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+  /*background-color: #548BC5;*/
+  /*color: white;*/
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+    border-radius: 4px;
+    width: 120px;
+    margin-left: -180px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: none;
+  border-left: none;
+  border: 1px solid black;
+}
+
+td, th {
+  text-align: center;
+  padding: 15px;
+  vertical-align: middle;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: 0.5px solid black;
+  border-left: 0.5px solid black;
+}
+
+/*
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+*/
+
+.ARG0{
+  color: #ffffff;
+  background-color: #ff0000;
+  border: 1px solid black;
+}
+
+.ARG1{
+  color: #ffffff;
+  background-color: #a31414;
+  border: 1px solid black;
+}
+
+.ARG2{
+  color: #ffffff;
+  background-color: #3eac38;
+  border: 1px solid black;
+}
+
+.ARG3{
+  color: #000000;
+  background-color: #ff7c60;
+  border: 1px solid black;
+}
+
+
+.V{
+  color: #000000;
+  background-color: #f9ff00;
+  border: 1px solid black;
+}
+
+.ARGM{
+  color: #000000;
+  background-color: #a6a6a6;
+  border: 1px solid black;
+}
+
+.O{
+  background-color: #ffffff;
+  border: 0.5px solid black;
+}
+
+.OTHER_TAG{
+  color: #000000;
+  background-color: #cec1d0;
+  border: 1px solid black;
+}
+
+
+#result-note {
+    margin-left: 20px;
+}
+
+/*
+#result-table {
+    margin-top: 20px;
+    height: 400px;
+    overflow: auto;
+}*/
