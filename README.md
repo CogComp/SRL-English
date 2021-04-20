@@ -148,7 +148,7 @@ Train the model:
 ```
 allennlp train bert_nom_id.jsonnet -s nom-id-bert -f --include-package id_nominal
 ``` 
-(An already-trained version of the model achieving 0.81 F1 on Nombank can be found at `/shared/celinel/test_allennlp/v0.9.0/test-id-bert/model.tar.gz as of 8/13/20.)
+(An already-trained version of the model achieving 0.81 F1 on Nombank can be found at `/shared/celinel/test_allennlp/v0.9.0/test-id-bert/model.tar.gz` as of 8/13/20.)
 
 To evaluate:
 ```
