@@ -186,7 +186,6 @@ python backend.py
 ```
 Then in another terminal window, run the program with either the following, modifying the port number and sentence as necessary. The following curl commands are supported:
 ```
-curl -d '{"sentence": "The president of the USA holds a lot of power."}' -H "Content-Type: application/json" -X POST http://localhost:8043/generate_table
 curl -d 'The president of the USA holds a lot of power.' -H "Content-Type: text/plain" -X GET http://localhost:8043/annotate
 curl -d '{"sentence": "The president of the USA holds a lot of power."}' -H "Content-Type: application/json" -X POST http://localhost:8043/annotate
 curl -X GET http://localhost:8043/annotate?sentence=The%20president%20of%20the%20USA%20holds%20a%20lot%20of%20power.
