@@ -84,86 +84,7 @@ class TabularView(object):
             return x.to_json()
         else:
             print(x, ' IS THE HARD ONE WE CANOT SANITIZE, IT IS OF TYPE, ', type(x))
-
-
-    def get_table_html(self):
-        html_string = "<table>"
-        html_string += "<tr><th>Sentence</th>"
-        frames = self._get_frame_descriptions()
-        frame_index = 0
-        for view_name, output in self.current_outputs.items():
-            for frame in output:
-                if not frame:
-                    continue
-                frame_info = frames[frame_index]
-                frame_index += 1
-                predicate = "FILLER"
-                if "nominal" in frame:
-                    predicate = frame["nominal"]
-                elif "verb" in frame:
-                    predicate = frame["verb"]
-                elif "preposition" in frame:
-                    predicate = frame["preposition"]
-                sense = ""
-                if "sense" in frame:
-                    sense = frame["sense"]
-                if frame_info:
-                    html_string += "<th><p>" + view_name + ":" + predicate + "." + sense + "</p><p>" + frame_info["name"] + "</p></th>"
-                else:
-                    html_string += "<th><p>" + view_name + ":" + predicate + "." + sense + "</p><p>No sense information.</p></th>"
-
-        html_string += "</tr>"
-        for idx, token in enumerate(self.ta["tokens"]):
-            html_string += "<tr>"
-            html_string += "<td>" + token + "</td>"
-            frame_index = 0
-            for view in self.current_outputs.values():
-                for frame in view:
-                    if not frame:
-                        continue
-                    frame_info = frames[frame_index]
-                    frame_index += 1
-                    tag = frame["tags"][idx] # TODO indexing bug 
-                    if tag.startswith("B-"):
-                        tag = tag[2:]
-                        rowspan = 1
-                        i = idx + 1
-                        while i < len(frame["tags"]):
-                            if frame["tags"][i] == "I-{}".format(tag):
-                                rowspan += 1
-                            else:
-                                break
-                            i += 1
-                        if rowspan > 1:
-                            html_string += "<td rowspan = " + str(rowspan) + " style=\"border: 1px black;\""
-                        else:
-                            html_string += "<td"
-                        if tag.startswith("ARG") and tag[3].isnumeric():
-                            if tag[3] in frame_info:
-                                role = frame_info[tag[3]]
-                                html_string += " class=\"" + tag[:4] + "\"><p>[" + tag + "]</p><p>" + role + "</p></td>"
-                            else:
-                                html_string += " class=\"" + tag[:4] + "\">[" + tag + "]</td>"
-
-                        elif tag=="V" or tag=="PREP":
-                            html_string += " class=\"V\">[" + tag + "]</td>"
-                        elif tag=="GOV":
-                            html_string += " class=\"ARG0\">[" + tag + "]</td>"
-                        elif tag=="OBJ":
-                            html_string += " class=\"ARG1\">[" + tag + "]</td>"
-                        elif tag.startswith("ARGM"):
-                            html_string += " class=\"ARGM\">[" + tag + "]</td>"
-                        else:
-                            html_string += " class=\"OTHER_TAG\">[" + tag + "]</td>"
-                    elif tag == "O":
-                        html_string += "<td class=\"O\"></td>"
-                    
-            html_string += "</tr>"
-        # html_string = self._add_frame_description(html_string)
-        html_string += "</table>"
-        # print(html_string)
-        return html_string
-
+    
     def _get_sense_description(self, directory, predicate, sense):
         subsense = 0
         if sense.find('.') >= 0:
@@ -175,12 +96,12 @@ class TabularView(object):
         sense_descriptions = {}
         if directory == "NOMBANK":
             frame_file = "/shared/celinel/noun_srl/nombank.1.0/frames/"
-            predicate = self.sp(predicate)[0].lemma_
+            # predicate = self.sp(predicate)[0].lemma_
         elif directory == "PROPBANK":
             frame_file = "/shared/celinel/propbank-frames/frames/"
         elif directory == "ONTONOTES":
             frame_file = "/shared/celinel/LDC2013T19/ontonotes-release-5.0/data/files/data/english/metadata/frames/"
-            predicate = self.sp(predicate)[0].lemma_ + "-v"
+            predicate = predicate + "-v"
         else:
             return sense_name, sense_descriptions
         frame_file = frame_file + predicate + ".xml"
@@ -281,6 +202,7 @@ class TabularView(object):
         relations = []
         for frame in nom_srl_frames:
             predicate = frame["nominal"]
+            predicate = self.sp(predicate)[0].lemma_
             description = frame["description"]
             tags = frame["tags"]
             sense = "NA"
@@ -356,13 +278,14 @@ class TabularView(object):
         relations = []
         for frame in verb_srl_frames:
             verb = frame["verb"]
+            lemma = self.sp(verb)[0].lemma_
             description = frame["description"]
             tags = frame["tags"]
             sense = "NA"
             if "sense" in frame:
                 sense = str(frame["sense"])
-            sense_name, sense_descriptions = self._get_sense_description("ONTONOTES", verb, sense)
-            properties = {"SenseNumber": sense, "predicate": verb, "sense": sense_name}
+            sense_name, sense_descriptions = self._get_sense_description("ONTONOTES", lemma, sense)
+            properties = {"SenseNumber": sense, "predicate": lemma, "sense": sense_name}
             if "B-V" not in tags: # NOTE This might give the wrong index of verb.
                 predicate_indices = [i for i, elt in enumerate(sentence) if elt == verb]
                 for pred_idx in predicate_indices:

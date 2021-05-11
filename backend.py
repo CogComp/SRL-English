@@ -1,7 +1,6 @@
 import cherrypy
 import json
 import os
-import sys
 
 from allennlp.models.archival import load_archive
 from allennlp.predictors.predictor import JsonDict
@@ -17,9 +16,6 @@ import prep_srl.preposition_srl_reader
 import prep_srl.preposition_srl_model
 from tabular_view import *
 
-
-serverURL = sys.argv[1]
-serverPort = int( sys.argv[2] )
 
 nom_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/nom-sense-srl/model.tar.gz',)
 verb_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/verb-sense-srl/model.tar.gz',)
@@ -89,26 +85,6 @@ class MyWebService(object):
         return open('public/srl.html')
 
     @cherrypy.expose
-    @cherrypy.tools.json_out()
-    @cherrypy.tools.json_in()
-    def generate_table(self):
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        input_json_data = cherrypy.request.json
-        id_output = nom_id_predictor.predict_json(input_json_data)
-        nom_srl_input = self._convert_id_to_srl_input(id_output)
-        nom_srl_output = nom_sense_srl_predictor.predict_json(nom_srl_input)
-        # nom_srl_output = nom_srl_predictor.predict_json(nom_srl_input)
-        # all_nom_srl_output = all_nom_sense_srl_predictor.predict_json(input_json_data)
-        verb_srl_output = verb_sense_srl_predictor.predict_json(input_json_data)
-        prep_srl_output = prep_srl_predictor.predict_json(input_json_data)
-        tabular_structure.update_sentence(nom_srl_output)
-        tabular_structure.update_view("SRL_VERB", verb_srl_output)
-        tabular_structure.update_view("SRL_NOM", nom_srl_output)
-        # tabular_structure.update_view("SRL_NOM_ALL", all_nom_srl_output)
-        tabular_structure.update_view("SRL_PREP", prep_srl_output)
-        return tabular_structure.get_table_html()
-
-    @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def annotate(self, sentence=None):
@@ -132,9 +108,7 @@ class MyWebService(object):
         all_nom_srl_output = all_nom_sense_srl_predictor.predict_json(input_json_data)
         verb_srl_output = verb_sense_srl_predictor.predict_json(input_json_data)
         prep_srl_output = prep_srl_predictor.predict_json(input_json_data)
-        print('PREP SRL OUTPUT: ', prep_srl_output)
         tabular_structure.update_sentence(nom_srl_output)
-        print('NOM SRL OUTPUT: ', nom_srl_output)
         tabular_structure.update_view("SRL_VERB", verb_srl_output)
         tabular_structure.update_view("SRL_NOM", nom_srl_output)
         tabular_structure.update_view("SRL_NOM_ALL", all_nom_srl_output)
@@ -147,6 +121,16 @@ if __name__ == '__main__':
             'tools.sessions.on': True,
             'tools.staticdir.root': os.path.abspath(os.getcwd())
         },
+    }
+    print("Starting rest service...")
+    config = {'server.socket_host': '0.0.0.0'}
+    cherrypy.config.update(config)
+    cherrypy.config.update({'server.socket_port': 8043})
+    cherrypy.quickstart(MyWebService(), '/', conf)
+
+
+
+'''
         '/static': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': 'public'
@@ -159,10 +143,4 @@ if __name__ == '__main__':
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "public/js"
         },
-    }
-    print("Starting rest service...")
-    # config = {'server.socket_host': '0.0.0.0'}
-    config = {'server.socket_host': serverURL}
-    cherrypy.config.update(config)
-    cherrypy.config.update({'server.socket_port': serverPort})
-    cherrypy.quickstart(MyWebService(), '/', conf)
+'''
