@@ -203,6 +203,7 @@ class TabularView(object):
         for frame in nom_srl_frames:
             predicate = frame["nominal"]
             predicate = self.sp(predicate)[0].lemma_
+            # print(frame["nominal"], '->', predicate)
             description = frame["description"]
             tags = frame["tags"]
             sense = "NA"
@@ -279,6 +280,7 @@ class TabularView(object):
         for frame in verb_srl_frames:
             verb = frame["verb"]
             lemma = self.sp(verb)[0].lemma_
+            # print(verb, '->', lemma)
             description = frame["description"]
             tags = frame["tags"]
             sense = "NA"

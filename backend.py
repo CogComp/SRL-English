@@ -61,8 +61,8 @@ def separate_hyphens(og_sentence):
 
 class MyWebService(object):
     
-    global tabular_structure
-    tabular_structure = TabularView()
+    # global tabular_structure
+    # tabular_structure = TabularView()
 
     def _convert_id_to_srl_input(self, id_output):
         indices = [idx for idx in range(len(id_output["nominals"])) if id_output["nominals"][idx]==1]
@@ -108,6 +108,7 @@ class MyWebService(object):
         all_nom_srl_output = all_nom_sense_srl_predictor.predict_json(input_json_data)
         verb_srl_output = verb_sense_srl_predictor.predict_json(input_json_data)
         prep_srl_output = prep_srl_predictor.predict_json(input_json_data)
+        tabular_structure = TabularView()
         tabular_structure.update_sentence(nom_srl_output)
         tabular_structure.update_view("SRL_VERB", verb_srl_output)
         tabular_structure.update_view("SRL_NOM", nom_srl_output)
