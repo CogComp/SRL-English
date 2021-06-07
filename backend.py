@@ -1,6 +1,7 @@
 import cherrypy
 import json
 import os
+import sys
 
 from allennlp.models.archival import load_archive
 from allennlp.predictors.predictor import JsonDict
@@ -16,6 +17,8 @@ import prep_srl.preposition_srl_reader
 import prep_srl.preposition_srl_model
 from tabular_view import *
 
+serverURL = sys.argv[1]
+serverPort = int( sys.argv[2] )
 
 nom_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/nom-sense-srl/model.tar.gz',)
 verb_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/verb-sense-srl/model.tar.gz',)
@@ -87,6 +90,16 @@ class MyWebService(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    def info(self, **params):
+        return {"status":"online"}
+
+    @cherrypy.expose
+    def halt(self, **params):
+        cherrypy.engine.exit()
+
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def annotate(self, sentence=None):
         try:
             input_json_data = cherrypy.request.json
@@ -124,9 +137,15 @@ if __name__ == '__main__':
         },
     }
     print("Starting rest service...")
+    '''
     config = {'server.socket_host': '0.0.0.0'}
     cherrypy.config.update(config)
     cherrypy.config.update({'server.socket_port': 8043})
+    cherrypy.quickstart(MyWebService(), '/', conf)
+    '''
+    config = {'server.socket_host': serverURL}
+    cherrypy.config.update(config)
+    cherrypy.config.update({'server.socket_port': serverPort})
     cherrypy.quickstart(MyWebService(), '/', conf)
 
 
