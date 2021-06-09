@@ -2,7 +2,7 @@ This repository contains all files created to perform the BERT-based nominal SRL
 
 [A visualized demo of this code is running on the CogComp demo site](https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL).
 
-For Nombank: It includes files to read the `nombank.1.0` corpus into a format usable by the model, as well as a reader, model, and predictor to be used with the AllenNLP workflow.
+For Nombank: It includes files to read the `nombank.1.0` corpus into a format usable by the model, as well as a reader, model, and predictor to be used with the AllenNLP workflow. 
 For Ontonotes: It includes the files to read the CoNLL-formatted Ontonotes, model, and predictor to be used with the AllenNLP workflow. 
 
 # Set up the environment
@@ -189,7 +189,11 @@ Then in another terminal window, run the program with either the following, modi
 curl -d 'The president of the USA holds a lot of power.' -H "Content-Type: text/plain" -X GET http://localhost:8043/annotate
 curl -d '{"sentence": "The president of the USA holds a lot of power."}' -H "Content-Type: application/json" -X POST http://localhost:8043/annotate
 curl -X GET http://localhost:8043/annotate?sentence=The%20president%20of%20the%20USA%20holds%20a%20lot%20of%20power.
-
 ```
+
+The view `SRL_VERB` corresponds to the verbal sense SRL. The model is created in folder `verb_sense_srl`.
+The view `SRL_NOM` corresponds to the nominal sense SRL. We pass the sentence through a nominal identifier model, then perform SRL on the identified nominals. The model is created in folder `nominal_sense_srl`, with predictor `predictor.py`.
+The view `SRL_NOM_ALL` corresponds to the nominal sense SRL where we perform SRL on all identified nouns in the sentences. The model is created in folder `nominal_sense_srl`, with predictor `predictor_all.py`.
+The view `SRL_PREP` corresponds to the preposition SRL. The model is created in folder `prep_srl`.
 
 Alternatively, to run it from a browser, navigate to `http://localhost:8043` and see the input/output on the screen.
