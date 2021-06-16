@@ -200,3 +200,6 @@ Alternatively, to run it from a browser, navigate to `http://localhost:8043` and
 
 # The model:
 The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf). We take a string input, pass it through the BERT layer, pass the output of the BERT layer through a linear layer, then use an Adam loss to backpropagate. In the joint SRL + sense models, both models use this design. They share the BERT layer than have separate linear layers. 
+
+# Contact:
+Questions: contact Celine at celine.y.lee@gmail.com
