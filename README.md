@@ -1,9 +1,10 @@
-This repository contains all files created to perform the BERT-based nominal SRL, both using the Nombank dataset and the Ontonotes dataset. It also includes a BERT-based predicate identifier based on the Nombank dataset.
+This repository contains all files created to perform the BERT-based nominal SRL, both using the Nombank dataset and the Ontonotes dataset. It also includes a BERT-based predicate identifier based on the Nombank, STREUSLE, and Bolt datasets. The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf).
 
 [A visualized demo of this code is running on the CogComp demo site](https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL).
 
 For Nombank: It includes files to read the `nombank.1.0` corpus into a format usable by the model, as well as a reader, model, and predictor to be used with the AllenNLP workflow. 
 For Ontonotes: It includes the files to read the CoNLL-formatted Ontonotes, model, and predictor to be used with the AllenNLP workflow. 
+
 
 # Set up the environment
 Create the environment and set up installs. I do this with a python3 venv.
@@ -37,6 +38,25 @@ python preprocess_nombank.py
 
 # Obtain the CONLL data
 [Follow these instructions.](https://cemantix.org/data/ontonotes.html)
+
+
+# The folders and views
+The view `SRL_VERB` corresponds to the verbal sense SRL. The model is created in folder `verb_sense_srl`. Without sense information, the folder to use would be the one provided in [AllenNLP v0.9.0 SRL](https://github.com/allenai/allennlp/blob/v0.9.0/allennlp/models/srl_bert.py).
+
+The view `SRL_NOM` corresponds to the nominal sense SRL. We pass the sentence through a nominal identifier model created in `id_nominal`, then perform SRL on the identified nominals. The model is created in folder `nominal_sense_srl`, with predictor `predictor.py`. Without sense information, the folder to use would be `nominal_srl`.
+
+The view `SRL_NOM_ALL` corresponds to the nominal sense SRL where we perform SRL on all identified nouns in the sentences. The model is created in folder `nominal_sense_srl`, with predictor `predictor_all.py`. Without sense information, the folder to use would be `nominal_srl`.
+
+The view `SRL_PREP` corresponds to the preposition SRL. The model is created in folder `prep_srl`.
+
+INCOMPLETE: `bolt_srl` is the beginning of an effort to perform SRL on adjectives. `bolt.py` helps read in the Bolt data.
+
+NOT INCLUDED: `combined_unconstrained_srl` is an effort to train an SRL model on all data we have: Ontonotes (verbs + some nominals), Nombank (nominals), Bolt (verbs + nominals + adjectives), Streusle (prepositions). This model has been used to perform some analysis, but it has not been fully documented so is currently considered incomplete. 
+
+# The model
+The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf). We take a string input, tokenize it, pass the tokenized input through the BERT module, pass the output of the BERT module through a linear layer, then use an Adam loss to backpropagate. 
+
+In the joint SRL + sense models, we also use this BERT + linear design. The SRL and sense predictions share the BERT layer then each have their own separate linear layers. The Adam losses of the SRL prediction and the sense prediction are added to create a joint loss for backpropagation.
 
 # Run the model: Nombank
 
@@ -193,17 +213,6 @@ curl -X GET http://localhost:8043/annotate?sentence=The%20president%20of%20the%2
 
 Alternatively, to run it from a browser, navigate to `http://localhost:8043` and see the input/output on the screen.
 
-
-# The folders and views:
-The view `SRL_VERB` corresponds to the verbal sense SRL. The model is created in folder `verb_sense_srl`. Without sense information, the folder to use would be `ontonotes_srl`.
-The view `SRL_NOM` corresponds to the nominal sense SRL. We pass the sentence through a nominal identifier model created in `id_nominal`, then perform SRL on the identified nominals. The model is created in folder `nominal_sense_srl`, with predictor `predictor.py`. Without sense information, the folder to use would be `nominal_srl`.
-The view `SRL_NOM_ALL` corresponds to the nominal sense SRL where we perform SRL on all identified nouns in the sentences. The model is created in folder `nominal_sense_srl`, with predictor `predictor_all.py`. Without sense information, the folder to use would be `nominal_srl`.
-The view `SRL_PREP` corresponds to the preposition SRL. The model is created in folder `prep_srl`.
-INCOMPLETE: `bolt_srl` is the beginning of an effort to perform SRL on adjectives. `bolt.py` helps read in the Bolt data.
-NOT INCLUDED: `combined_unconstrained_srl` is an effort to train an SRL model on all data we have: Ontonotes (verbs + some nominals), Nombank (nominals), Bolt (verbs + nominals + adjectives), Streusle (prepositions). This model has been used to perform some analysis, but it has not been fully documented so is currently considered incomplete. 
-
-# The model:
-The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf). We take a string input, pass it through the BERT layer, pass the output of the BERT layer through a linear layer, then use an Adam loss to backpropagate. In the joint SRL + sense models, both models use this design. They share the BERT layer than have separate linear layers. 
 
 # Contact:
 Questions: contact Celine at celine.y.lee@gmail.com
