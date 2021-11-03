@@ -79,7 +79,7 @@ allennlp evaluate nom-srl-bert/model.tar.gz /path/to/preprocess_nombank/test.srl
 To predict:
 Create input text file with JSON formatting: `{"sentence": "This is a sentence.", "indices": [3]}` for each sentence you would like predicted.
 ```
-allennlp predict nom-srl-bert/model.tar.gz input.txt --output-file predicted_output.txt --predictor "nominal-semantic-role-labeling" --include-package nominal_srl
+allennlp predict nom-srl-bert/model.tar.gz input.txt --output-file predicted_output.txt --predictor "nombank-semantic-role-labeling" --include-package nominal_srl
 ```
 
 To predict a single sentence without a file input. With the -ta flag, output will be in TextAnnotation form. Otherwise, it will be in the standard output dictionary form:
