@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import argparse
 
 from allennlp.models.archival import load_archive
 from allennlp.predictors.predictor import JsonDict
@@ -13,11 +14,21 @@ import prep_srl.preposition_srl_reader
 import prep_srl.preposition_srl_model
 from tabular_view import *
 
-mode = sys.argv[1]
-content = sys.argv[2]
-filename = sys.argv[3]
-input_directory = sys.argv[4]
-output_directory = sys.argv[5]
+# mode = sys.argv[1]
+# content = sys.argv[2]
+# filename = sys.argv[3]
+# input_directory = sys.argv[4]
+# output_directory = sys.argv[5]
+
+parser = argparse.ArgumentParser(description='SRL, annotation for Event extraction.')
+
+parser.add_argument('--mode', default='content', help='mode of operation, 3 available value, content, file, directory, with content a set of sentences are processed, with file 1 single file is processed, with directory all files in directory is processed.)')
+parser.add_argument('--content', default='', help='Text to process')
+parser.add_argument('--filename', default='', help='name of file to be processed')
+parser.add_argument('--input_directory', default='', help='path of input directory of files to processed')
+parser.add_argument('--output_directory', default='', help='path of output directory to save json files containing ooutput')
+
+
 
 
 
@@ -110,13 +121,37 @@ class Annotation(object):
             for filename in file_list:
                 content = open(input_directory + "/" + filename, "r").read()
                 annJson =  self.annotate(content)
-                print("_" * 80)
+                print("_" * 50)
                 print(filename)
-                print("_" * 80)
+                print("_" * 50)
+                print(annJson)
+                print("_" * 50)
+
+
+    def annotateMain(self, args):
+        if args.mode == "content":
+            output = self.annotate(sentence=args.content)
+            print(output)
+            return output
+        elif args.mode == "file":
+            content = open(args.filename, "r").read()
+            output = self.annotate(content)
+            print(output)
+            return output
+        
+        elif args.mode == "directory":
+            file_list = os.listdir(args.input_directory)
+            for filename in file_list:
+                content = open(args.input_directory + "/" + filename, "r").read()
+                annJson =  self.annotate(content)
+                print("_" * 50)
+                print(filename)
+                print("_" * 50)
                 print(annJson)
                 print("_" * 50)
 
 
 if __name__ == '__main__':
+    args = parser.parse_args()
     annotationObj = Annotation()
-    annotationObj.annotateMain(mode = mode, content=content, filename=filename, input_directory=input_directory, output_directory=output_directory)
+    annotationObj.annotateMain(args)
