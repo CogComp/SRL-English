@@ -2,7 +2,12 @@ This repository contains all files created to perform the BERT-based nominal SRL
 
 [A visualized demo of this code is running on the CogComp demo site](https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL).
 
-[Trained models can be downloaded from Huggingface] (https://huggingface.co/Yuqian/Celine_SRL/tree/main).
+[Trained models can be downloaded from Huggingface] (https://huggingface.co/Yuqian/Celine_SRL/tree/main)
+Trained models can also be downloaded from the CogComp website:
+[Nominal Sense Disambiguation and SRL](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/nom-sense-srl/model.tar.gz)
+[Verb Sense Disambiguation and SRL](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/verb-sense-srl/model.tar.gz)
+<!-- [](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/test-id-bert/model.tar.gz) -->
+[Preposition SRL](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/prep-srl/model.tar.gz)
 
 For Nombank: It includes files to read the `nombank.1.0` corpus into a format usable by the model, as well as a reader, model, and predictor to be used with the AllenNLP workflow. 
 For Ontonotes: It includes the files to read the CoNLL-formatted Ontonotes, model, and predictor to be used with the AllenNLP workflow. 
