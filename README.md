@@ -223,7 +223,7 @@ Alternatively, to run it from a browser, navigate to `http://localhost:8043` and
 
 ## Performance Metrics of SRL
 
-| Model Name                |Dataset      | Precision(%) | Recall(%)   | F<sub>1</sub> Score(%) | Loss        | Sense Accuracy(%) | Combined Score(%)|
+| Name                  |Dataset      | Precision(%) | Recall(%)   | F<sub>1</sub> Score(%) | Loss        | Sense Accuracy(%) | Combined Score(%)|
 |:---------------------:|:-----------:|:------------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
 | Combined Unconstrained| ---         | 83.936       | 85.499      | 84.710      | 0.3552      | ---         | ---         |
 | ID Nominal            | ---         | ---          | ---         | ---         | ---         | ---         | ---         |
