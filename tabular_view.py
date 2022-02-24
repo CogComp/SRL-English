@@ -24,7 +24,8 @@ class TabularView(object):
         self.ta["text"] = text
         self.ta["tokens"] = tokens
         self.ta["tokenOffsets"] = predict_utils.create_token_char_offsets(text)
-        sentence_end_positions = [i+1 for i,x in enumerate(tokens) if x=="."]
+        #sentence_end_positions = [i+1 for i,x in enumerate(tokens) if x=="."]
+        sentence_end_positions = [i+1 for i,x in enumerate(tokens) if x in [".", "?", "!", "..."]]
         sentences = {"generator": generator, "score": 1.0, "sentenceEndPositions": sentence_end_positions}
         self.ta["sentences"] = sentences
         
