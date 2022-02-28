@@ -1,3 +1,4 @@
+from time import time
 from typing import List
 
 from overrides import overrides
@@ -9,6 +10,8 @@ from allennlp.data.tokenizers.word_splitter import SpacyWordSplitter
 from allennlp.models import Model
 from allennlp.predictors.predictor import Predictor
 
+# print("Processing time for import VERB", time() - start_time)
+
 
 @Predictor.register("sense-semantic-role-labeling")
 class SenseSRLPredictor(Predictor):
@@ -17,7 +20,9 @@ class SenseSRLPredictor(Predictor):
     """
     def __init__(self, model: Model, dataset_reader: DatasetReader, language: str = 'en_core_web_sm') -> None:
         super().__init__(model, dataset_reader)
+        # start_time = time()
         self._tokenizer = SpacyWordSplitter(language=language, pos_tags=True)
+        # print("Processing time for init tokenizzer verb ", time() - start_time)
 
     def predict(self, sentence: str) -> JsonDict:
         """
@@ -127,9 +132,14 @@ class SenseSRLPredictor(Predictor):
         instances : ``List[Instance]``
             One instance per verb.
         """
+        # start_time = time()
         sentence = json_dict["sentence"]
         tokens = self._tokenizer.split_words(sentence)
+
+        # print("Processing time for tokenizing verb ", time() - start_time)
+        
         return self.tokens_to_instances(tokens)
+
 
     @overrides
     def predict_batch_json(self, inputs: List[JsonDict]) -> List[JsonDict]:
@@ -209,6 +219,7 @@ class SenseSRLPredictor(Predictor):
         return sanitize(return_dicts)
 
     def predict_instances(self, instances: List[Instance]) -> JsonDict:
+        # start_time = time()
         outputs = self._model.forward_on_instances(instances)
 
         results = {"verbs": [], "words": outputs[0]["words"]}
@@ -221,7 +232,8 @@ class SenseSRLPredictor(Predictor):
                     "description": description,
                     "tags": tags,
             })
-
+        
+        # print("Processing Time for verb inst", time() - start_time)
         return sanitize(results)
 
     @overrides
@@ -239,10 +251,16 @@ class SenseSRLPredictor(Predictor):
                 {"verb": "...", "sense": "..", "description": "...", "tags": [...]},
             ]}
         """
+
+        # start_time = time()
         
         instances = self._sentence_to_srl_instances(inputs)
 
         if not instances:
             return sanitize({"verbs": [], "words": self._tokenizer.split_words(inputs["sentence"])})
 
+        # print("Processing Time for verb ", time() - start_time)
+
         return self.predict_instances(instances)
+
+

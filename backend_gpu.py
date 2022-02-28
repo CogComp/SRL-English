@@ -16,7 +16,8 @@ from prep_srl.preposition_srl_predictor import PrepositionSemanticRoleLabelerPre
 import prep_srl.preposition_srl_reader
 import prep_srl.preposition_srl_model
 from tabular_view import *
-# from time import time
+from datetime import datetime
+from time import time
 
 serverURL = sys.argv[1]
 serverPort = int( sys.argv[2] )
@@ -24,20 +25,29 @@ serverPort = int( sys.argv[2] )
 # start_load_model = time()
 nom_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/nom-sense-srl/model.tar.gz',)
 verb_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/verb-sense-srl/model.tar.gz',)
+
 nom_sense_srl_predictor = NomSenseSRLPredictor.from_archive(nom_sense_srl_archive, "nombank-sense-srl")
+nom_sense_srl_predictor._model = nom_sense_srl_predictor._model.cuda()
+
 all_nom_sense_srl_predictor = AllNomSenseSRLPredictor.from_archive(nom_sense_srl_archive, "all-nombank-sense-srl")
 verb_sense_srl_predictor = SenseSRLPredictor.from_archive(verb_sense_srl_archive, "sense-semantic-role-labeling")
+verb_sense_srl_predictor._model = verb_sense_srl_predictor._model.cuda()
 print('LOADED VERB MODEL')
 # verb_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/verb-srl-bert/model.tar.gz',)
 # verb_srl_predictor = VerbSemanticRoleLabelerPredictor.from_archive(verb_srl_archive, "semantic-role-labeling")
+
 nom_id_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/test-id-bert/model.tar.gz',)
 nom_id_predictor = NominalIdPredictor.from_archive(nom_id_archive, "nombank-id")
+nom_id_predictor._model = nom_id_predictor._model.cuda()
+
 # nom_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/nom-srl-bert/model.tar.gz',)
 # nom_srl_predictor = NominalSemanticRoleLabelerPredictor.from_archive(nom_srl_archive, "nombank-semantic-role-labeling")
 # noun_srl_predictor = NounSemanticRoleLabelerPredictor.from_archive(nom_srl_archive, "noun-semantic-role-labeling")
 print('LOADED NOM MODEL')
+
 prep_srl_archive = load_archive("/shared/fmarini/preposition-SRL/preposition-SRL/new-srl-manual/model.tar.gz",)
 prep_srl_predictor = PrepositionSemanticRoleLabelerPredictor.from_archive(prep_srl_archive, "preposition-semantic-role-labeling")
+prep_srl_predictor._model = prep_srl_predictor._model.cuda()
 print('LOADED PREP MODEL')
 
 # print("Processing time for loading models: ", time() - start_load_model)
@@ -105,7 +115,8 @@ class MyWebService(object):
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def annotate(self, sentence=None):
-        # start_time = time()
+        print("Current Time: ", datetime.now())
+        start_time = time()
         try:
             input_json_data = cherrypy.request.json
             input_json_data["sentence"] = " ".join(separate_hyphens(input_json_data["sentence"].split()))
@@ -147,7 +158,8 @@ class MyWebService(object):
         tabular_structure.update_view("SRL_NOM", nom_srl_output)
         tabular_structure.update_view("SRL_NOM_ALL", all_nom_srl_output)
         tabular_structure.update_view("SRL_PREP", prep_srl_output)
-        # print("\n\nProcessing Time: ", time() - start_time, "\n\n")
+        # tabular_structure.update_view("SRL_PREP", None)
+        print("\n\nProcessing Time: ", time() - start_time, "\n\n")
         return tabular_structure.get_textannotation()
 
 if __name__ == '__main__':
