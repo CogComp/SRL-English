@@ -16,12 +16,12 @@ from prep_srl.preposition_srl_predictor import PrepositionSemanticRoleLabelerPre
 import prep_srl.preposition_srl_reader
 import prep_srl.preposition_srl_model
 from tabular_view import *
-# from time import time
+
 
 serverURL = sys.argv[1]
 serverPort = int( sys.argv[2] )
 
-# start_load_model = time()
+
 nom_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/nom-sense-srl/model.tar.gz',)
 verb_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/verb-sense-srl/model.tar.gz',)
 nom_sense_srl_predictor = NomSenseSRLPredictor.from_archive(nom_sense_srl_archive, "nombank-sense-srl")
@@ -40,7 +40,7 @@ prep_srl_archive = load_archive("/shared/fmarini/preposition-SRL/preposition-SRL
 prep_srl_predictor = PrepositionSemanticRoleLabelerPredictor.from_archive(prep_srl_archive, "preposition-semantic-role-labeling")
 print('LOADED PREP MODEL')
 
-# print("Processing time for loading models: ", time() - start_load_model)
+
 
 def separate_hyphens(og_sentence):
     new_sentence = []
@@ -105,7 +105,6 @@ class MyWebService(object):
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def annotate(self, sentence=None):
-        # start_time = time()
         try:
             input_json_data = cherrypy.request.json
             input_json_data["sentence"] = " ".join(separate_hyphens(input_json_data["sentence"].split()))
@@ -120,26 +119,16 @@ class MyWebService(object):
                 sentence = separate_hyphens(sentence.split())
                 input_json_data = {"sentence": " ".join(sentence)}
 
-        # start_time_comp = time()
         id_output = nom_id_predictor.predict_json(input_json_data)
-        # print("Processing time for ",  "id :", time() - start_time_comp)
 
-        # start_time_comp = time()
         nom_srl_input = self._convert_id_to_srl_input(id_output)
         nom_srl_output = nom_sense_srl_predictor.predict_json(nom_srl_input)
-        # print("Processing time for ",  "nom_srl :", time() - start_time_comp)
 
-        # start_time_comp = time()
         all_nom_srl_output = all_nom_sense_srl_predictor.predict_json(input_json_data)
-        # print("Processing time for ",  "all_nom_srl :", time() - start_time_comp)
 
-        # start_time_comp = time()
         verb_srl_output = verb_sense_srl_predictor.predict_json(input_json_data)
-        # print("Processing time for ",  "verb_srl :", time() - start_time_comp)
 
-        # start_time_comp = time()
         prep_srl_output = prep_srl_predictor.predict_json(input_json_data)
-        # print("Processing time for ",  "prep_srl :", time() - start_time_comp)
 
         tabular_structure = TabularView()
         tabular_structure.update_sentence(nom_srl_output)
@@ -147,7 +136,6 @@ class MyWebService(object):
         tabular_structure.update_view("SRL_NOM", nom_srl_output)
         tabular_structure.update_view("SRL_NOM_ALL", all_nom_srl_output)
         tabular_structure.update_view("SRL_PREP", prep_srl_output)
-        # print("\n\nProcessing Time: ", time() - start_time, "\n\n")
         return tabular_structure.get_textannotation()
 
 if __name__ == '__main__':
