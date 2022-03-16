@@ -16,11 +16,12 @@ from prep_srl.preposition_srl_predictor import PrepositionSemanticRoleLabelerPre
 import prep_srl.preposition_srl_reader
 import prep_srl.preposition_srl_model
 from tabular_view import *
-
+import torch
 
 serverURL = sys.argv[1]
 serverPort = int( sys.argv[2] )
 
+cuda_available = torch.cuda.is_available()
 
 nom_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/nom-sense-srl/model.tar.gz',)
 verb_sense_srl_archive = load_archive('/shared/celinel/test_allennlp/v0.9.0/verb-sense-srl/model.tar.gz',)
@@ -40,6 +41,12 @@ prep_srl_archive = load_archive("/shared/fmarini/preposition-SRL/preposition-SRL
 prep_srl_predictor = PrepositionSemanticRoleLabelerPredictor.from_archive(prep_srl_archive, "preposition-semantic-role-labeling")
 print('LOADED PREP MODEL')
 
+if cuda_available:
+    nom_sense_srl_predictor._model = nom_sense_srl_predictor._model.cuda()
+    all_nom_sense_srl_predictor._model = all_nom_sense_srl_predictor._model.cuda()
+    verb_sense_srl_predictor._model = verb_sense_srl_predictor._model.cuda()
+    nom_id_predictor._model = nom_id_predictor._model.cuda()
+    prep_srl_predictor._model = prep_srl_predictor._model.cuda()
 
 
 def separate_hyphens(og_sentence):
