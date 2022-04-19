@@ -1,19 +1,20 @@
+# Semantic Role Labeling (SRL)
+
 This repository contains all files created to perform the BERT-based nominal SRL, both using the Nombank dataset and the Ontonotes dataset. It also includes a BERT-based predicate identifier based on the Nombank, STREUSLE, and Bolt datasets. The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf).
 
-[A visualized demo of this code is running on the CogComp demo site](https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL).
-
-[Trained models can be downloaded from Huggingface] (https://huggingface.co/Yuqian/Celine_SRL/tree/main)
-Trained models can also be downloaded from the CogComp website:
-[Nominal Sense Disambiguation and SRL](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/nom-sense-srl/model.tar.gz)
-[Verb Sense Disambiguation and SRL](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/verb-sense-srl/model.tar.gz)
-<!-- [](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/test-id-bert/model.tar.gz) -->
-[Preposition SRL](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/prep-srl/model.tar.gz)
-
-For Nombank: It includes files to read the `nombank.1.0` corpus into a format usable by the model, as well as a reader, model, and predictor to be used with the AllenNLP workflow. 
+For Nombank: It includes files to read the `nombank.1.0` corpus into a format usable by the model, as well as a reader, model, and predictor to be used with the AllenNLP workflow.<br>
 For Ontonotes: It includes the files to read the CoNLL-formatted Ontonotes, model, and predictor to be used with the AllenNLP workflow. 
 
 
-## Setup Environment
+## Demo
+
+<img width="1618" alt="image" src="https://user-images.githubusercontent.com/22654200/164028418-6ade64c8-89dd-4fd3-9a75-3fd1ead798b5.png">
+
+Demo Version Link: https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL
+
+
+## Setup
+
 Create the environment and set up installs. I do this with a python3 venv.
 ```
 python3 -m venv srl_venv
@@ -29,14 +30,19 @@ pip install nltk # Only need this if you are running the data pre-processing ste
 git clone <this repository's link>
 cd nominal-srl-allennlpv0.9.0
 ```
+
+
 ## Data
+
 ### Pre-process Nombank Data
-You must first obtain the Nombank data from the [site](https://nlp.cs.nyu.edu/meyers/NomBank.html).
+
+Let's obtain the Nombank data from the [site](https://nlp.cs.nyu.edu/meyers/NomBank.html).
 
 Downloads needed: nltk
 
 Set up the data and run preprocessing. (This will take about (25?) minutes.): 
-First sort the nombank.1.0 file: `sort nombank.1.0 > sorted_nombank.1.0`
+
+First sort the nombank.1.0 file: `sort nombank.1.0 > sorted_nombank.1.0`<br>
 Then enter the `preprocess_nombank/preprocess_nombank.py` file and update the path pointer links to where you put the data. Once this has been set up, run preprocessing:
 ```
 cd preprocess_nombank
@@ -44,10 +50,12 @@ python preprocess_nombank.py
 ```
 
 ### Obtain the CONLL data
-[Follow these instructions.](https://cemantix.org/data/ontonotes.html)
+
+[CONLL Ontonotes Dataset and Instructions](https://cemantix.org/data/ontonotes.html)
 
 
-## The folders and views
+## Folders and Views
+
 The view `SRL_VERB` corresponds to the verbal sense SRL. The model is created in folder `verb_sense_srl`. Without sense information, the folder to use would be the one provided in [AllenNLP v0.9.0 SRL](https://github.com/allenai/allennlp/blob/v0.9.0/allennlp/models/srl_bert.py).
 
 The view `SRL_NOM` corresponds to the nominal sense SRL. We pass the sentence through a nominal identifier model created in `id_nominal`, then perform SRL on the identified nominals. The model is created in folder `nominal_sense_srl`, with predictor `predictor.py`. Without sense information, the folder to use would be `nominal_srl`.
@@ -60,10 +68,20 @@ INCOMPLETE: `bolt_srl` is the beginning of an effort to perform SRL on adjective
 
 NOT INCLUDED: `combined_unconstrained_srl` is an effort to train an SRL model on all data we have: Ontonotes (verbs + some nominals), Nombank (nominals), Bolt (verbs + nominals + adjectives), Streusle (prepositions). This model has been used to perform some analysis, but it has not been fully documented so is currently considered incomplete. 
 
+
 ## Models
+
 The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf). We take a string input, tokenize it, pass the tokenized input through the BERT module, pass the output of the BERT module through a linear layer, then use an Adam loss to backpropagate. 
 
 In the joint SRL + sense models, we also use this BERT + linear design. The SRL and sense predictions share the BERT layer then each have their own separate linear layers. The Adam losses of the SRL prediction and the sense prediction are added to create a joint loss for backpropagation.
+
+Trained models can also be downloaded from following sources:
+1. [HuggingFace](https://huggingface.co/Yuqian/Celine_SRL/tree/main)
+2. CogComp website:
+    * [SRL model for Nominal Sense Disambiguation](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/nom-sense-srl/model.tar.gz)
+    * [SRL model for Verb Sense Disambiguation](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/verb-sense-srl/model.tar.gz)
+    <!-- [](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/test-id-bert/model.tar.gz) -->
+    * [SRL model for Preposition](https://cogcomp.seas.upenn.edu/models/English_SRL_Sense/prep-srl/model.tar.gz)
 
 ### Run model: Nombank
 
@@ -114,6 +132,7 @@ Create input text file with JSON formatting: `{"sentence": "This is a sentence."
 ```
 allennlp predict nom-sense-srl/model.tar.gz input.txt --output-file nom-sense-srl/predicted_output.txt --predictor "nominal-sense-srl" --include-package nominal_sense_srl
 ```
+
 ### Run model: Ontonotes
 
 First set up the paths used. The existing `set_paths.sh` file does work on the CCG machines for the location of the unpacked CONLL data, as of 7/27/2020. If you would like to point to a different location, simply modify the `set_path.sh` file.
@@ -141,13 +160,14 @@ To predict a single sentence without file input:
 ```
 python onto_predict_sentence.py srl-bert-ontonotes/model.tar.gz "Ideal Basic Industries Inc. said its directors reached an agreement in principle calling for HOFI North America Inc. to combine its North American cement holdings with Ideal in a transaction that will leave Ideal's minority shareholders with 12.8% of the combined company." --output_file onto_predict_output.txt
 ```
-#### To Run Ontonotes Model on only NN Predicates:
 
+#### To Run Ontonotes Model on only NN Predicates:
 
 To predict a single sentence without file input:
 ```
 python onto_nom_predict_sentence.py srl-bert-ontonotes/model.tar.gz "Ideal Basic Industries Inc. said its directors reached an agreement in principle calling for HOFI North America Inc. to combine its North American cement holdings with Ideal in a transaction that will leave Ideal's minority shareholders with 12.8% of the combined company." --output_file onto_predict_nom_output.txt
 ```
+
 #### Run Model: Ontonotes Sense Disambiguation and SRL
 
 There is also a model that joinly performs sense disambiguation and SRL, defined at `verb_sense_srl`. Set up the paths and model files at `bert_sense_srl.jsonnet`.  
@@ -191,7 +211,6 @@ allennlp predict nom-id-bert/model.tar.gz input.txt --output-file predicted_outp
 
 ### Run Entire Nominal Identifier and SRL Pipeline:
 
-
 To run the nominal predicate identifier and srl predictor together, a simple script and function is provided to stitch the output of the id model (at `/shared/celine/test_allennlp/v0.9.0/test-id-bert/model.tar.gz` as of 8/13/20) to the input of the srl model (at `/shared/celinel/test_allennlp/v0.9.0/nom-srl-bert/model.tar.gz` as of 8/13/20).
 
 Make a file of the input sentences in the same dict format: `{"sentence": "This part will be the sentence."}`. In the example below, we name the input file with this format as `input.txt`. 
@@ -203,7 +222,9 @@ The output will be printed to the terminal. Or, if you would like for the output
 . ./run_nom_pipeline.sh input.txt output.txt
 ```
 
+
 ## Run cherrypy backend:
+
 The cherrypy backend runs the predictors for nominal identification, nominal sense SRL, verb sense SRL, and preposition SRL. 
 
 Set up the environment and set up the port. Make modifications to the port number inside `backend.py` as necessary.
@@ -221,7 +242,7 @@ curl -X GET http://localhost:8043/annotate?sentence=The%20president%20of%20the%2
 Alternatively, to run it from a browser, navigate to `http://localhost:8043` and see the input/output on the screen.
 
 
-## Performance Metrics of SRL
+## Evaluation Metrics of SRL
 
 | Name                  |Dataset      | Precision(%) | Recall(%)   | F<sub>1</sub> Score(%) | Loss        | Sense Accuracy(%) | Combined Score(%)|
 |:---------------------:|:-----------:|:------------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
@@ -234,5 +255,6 @@ Alternatively, to run it from a browser, navigate to `http://localhost:8043` and
 | Verb Sense            | CONLL       |82.946        | 85.381      | 84.146      | 1.0142      | 88.142      | 74.168      |
 
 
-# Contact:
-Questions: contact Celine at celine.y.lee@gmail.com
+## Contact:
+
+For questions: Celine at celine.y.lee@gmail.com
