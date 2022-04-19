@@ -8,9 +8,10 @@ For Ontonotes: It includes the files to read the CoNLL-formatted Ontonotes, mode
 
 ## Demo
 
-<img width="1618" alt="image" src="https://user-images.githubusercontent.com/22654200/164028418-6ade64c8-89dd-4fd3-9a75-3fd1ead798b5.png">
+<img width="1610" alt="image" src="https://user-images.githubusercontent.com/22654200/164033726-9275eafa-10fd-4930-8108-9c27aca05212.png">
 
-Demo Version Link: https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL
+An interactive demo version is running on CogComp website
+Link: https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL
 
 
 ## Setup
