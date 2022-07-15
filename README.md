@@ -12,7 +12,7 @@ For Ontonotes: It includes the files to read the CoNLL-formatted Ontonotes, mode
 
 An interactive demo version is running on CogComp website.
 
-Link: https://cogcomp.seas.upenn.edu/page/demo_view/EnglishSRL
+Link: https://cogcomp.seas.upenn.edu/page/demo_view/SRLEnglish
 
 
 ## Setup
