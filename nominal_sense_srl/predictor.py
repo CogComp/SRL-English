@@ -13,7 +13,7 @@ from allennlp.data.tokenizers.word_splitter import SpacyWordSplitter
 
 from nominal_srl.nominal_srl_reader import separate_hyphens
 
-@Predictor.register("nombank-sense-srl")
+@Predictor.register("nominal-sense-srl")
 class NomSenseSRLPredictor(Predictor):
     """
     Predictor for the nominal BERT-based SRL model.
